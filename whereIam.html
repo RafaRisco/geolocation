@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>Where I am 2</title>
+      <script>
+      var watchId, startLat, startLong;
+      var start = 1;
+      window.onload = function()
+      {
+        if (navigator.geolocation)
+        {
+          watchId = navigator.geolocation.watchPosition(onSuccess, onError, {
+            maximumAge: 60000,
+            timeout: 5*60*1000,
+            enableHighAccurady: true
+          });
+        }
+      }
+
+      function onSuccess(position)
+      {
+
+        var currentLat = position.coords.latitude;
+        var currentLong = position.coords.longitude;
+
+        if (start==1)
+        {
+          startLat = currentLat;
+          startLong = currentLong;
+          start = 0;
+        }
+
+        var geocoder = new google.maps.Geocoder;
+        var latlong = new google.maps.LatLng(currentLat, currentLong);
+
+        geocoder.geocode({'location': latlong}, function(results, status) {
+        if (status === 'OK') {
+          if (results) {
+              document.getElementById("location").innerHTML = "You are now near " + results[0].formatted_address;
+          } else {
+            alert('No results found');
+          }
+        } else {
+          alert('Geocoder failed due to: ' + status);
+        }
+      });
+
+      var initMap = function() {
+        var latlng = new google.maps.LatLng(startLat, startLong);
+        var map = new google.maps.Map(document.getElementById('map'), {
+        center: latlng,
+        scrollwheel: true,
+        zoom: 18,
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+      });
+      var wh = {lat: startLat, lng: startLong};
+      var marker = new google.maps.Marker({
+        position: latlng,
+        map: map,
+        title:"my first marker",
+        animation: google.maps.Animation.DROP,
+        // icon: "green.png"
+      });
+      var info = new google.maps.InfoWindow({
+        content: "My information window!!"
+      });
+      google.maps.event.addListener(marker, "click", function(){
+        info.open(map, marker);
+      })
+    }
+    initMap()
+    }
+
+      function onError(error)
+      {
+        switch(error.code)
+        {
+          case PERMISION_DENIED:
+            alert("User denied permission");
+            break;
+          case TIMEOUT:
+            alert("Geolocation timed out");
+            break;
+          case POSITION_UNAVAILABLE:
+            alert("Geolocation information is not available")
+            break;
+          default:
+            alert("Unknown error");
+            break;
+        }
+      }
+
+
+    initMap()
+      </script>
+      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyARqS0p-B803819uh-0flhdum-cmIzWKNQ&&callback=initMap" async defer></script>
+   </head>
+   <body>
+      <div id="location"></div>
+      <div id="map" style="width:600px;height:500px;">
+
+      </div>
+   </body>
+</html>

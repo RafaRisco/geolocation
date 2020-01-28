@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>Get Current Position</title>
+      <script type='text/javascript'>
+        window.onload = function()
+        {
+          var latitude = 38.897733;
+          var longitude = -77.036532;
+          var latlong = latitude + "," + longitude;
+          var mapUrl = "https://maps.googleapis.com/maps/api/staticmap?center=" + latlong + "&zoom=15&size=600x500&maptype=hydrid&key=AIzaSyARqS0p-B803819uh-0flhdum-cmIzWKNQ";
+          document.getElementById("staticmap").innerHTML = "<img src='" + mapUrl +"'>";
+        }
+      </script>
+   </head>
+   <body>
+      <div id="staticmap" style="width:600px;height:500px;">
+      </div>
+   </body>
+</html>
